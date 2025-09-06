@@ -21,7 +21,8 @@ import {
   Camera,
   Image as ImageIcon,
   Heart,
-  MessageCircle
+  MessageCircle,
+  Trash2
 } from 'lucide-react';
 import { Navigation } from '@/components/Navigation';
 import { apiClient, API_ORIGIN, PhotoItem } from '@/lib/apiClient';
@@ -53,8 +54,19 @@ const PhotoGallery = () => {
   const [comments, setComments] = useState<Record<number, any[]>>({});
   const [showComments, setShowComments] = useState<Record<number, boolean>>({});
   const [newComment, setNewComment] = useState<Record<number, string>>({});
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [newPhoto, setNewPhoto] = useState<{
+    title: string;
+    description?: string;
+    category?: string;
+    tags?: string;
+    url?: string;
+    dataUrl?: string;
+  }>({ title: '' });
+  const [photos, setPhotos] = useState<PhotoItem[]>([]);
   const { elementRef, isVisible } = useScrollAnimation(0.1);
   const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+  const isAdmin = currentUser?.isAdmin || false;
 
   const normalizeUrl = (raw: string): string => {
     if (!raw) return '/placeholder.svg';
